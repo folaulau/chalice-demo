@@ -4,17 +4,9 @@ import sys
 from controllers.UserController import UserController
 
 app = Chalice(app_name='chalice-demo', configure_logs=True, debug=True)
-handler = logging.StreamHandler(sys.stdout)
-handler.setFormatter(logging.Formatter("%(asctime)s %(lineno)d %(name)-12s %(levelname)-8s %(message)s"))
-app.log.removeHandler(app.log.handlers[0])
-app.log.addHandler(handler)
-# app.log.basicConfig(
-#         level=logging.DEBUG,
-#         format="%(asctime)s %(lineno)d %(name)-12s %(levelname)-8s %(message)s",
-#         handlers=[
-#             logging.StreamHandler(sys.stdout)
-#         ]
-#     )
+# Set logging format
+formatter = logging.Formatter('%(asctime)s %(filename)s %(funcName)s %(lineno)d %(levelname)-8s %(message)s')
+app.log.handlers[0].setFormatter(formatter)
 
 @app.route('/', methods=['GET'])
 def home():
