@@ -1,9 +1,28 @@
 {
   "version": "2.0",
   "app_name": "chalice-demo",
+  "tags": {
+    "application": "Demo",
+    "owner": "Folau"
+  },
+  "environment_variables": {
+      "application_version": "1.1",
+      "platform_add_content": "/add/content"
+  },
   "stages": {
     "dev": {
-      "api_gateway_stage": "api"
+      "api_gateway_stage": "api",
+      "environment_variables": {
+        "avl_env": "dev",
+        "log_level" : "DEBUG"
+      }
+    },
+    "qa": {
+      "api_gateway_stage": "api",
+      "environment_variables": {
+        "avl_env": "dev",
+        "log_level" : "DEBUG"
+      }
     }
   }
 }
