@@ -5,7 +5,7 @@ from controllers.UserController import UserController
 
 app = Chalice(app_name='chalice-demo', configure_logs=True, debug=True)
 # Set logging format
-formatter = logging.Formatter('%(asctime)s %(filename)s %(funcName)s %(lineno)d %(levelname)-8s %(message)s')
+formatter = logging.Formatter('%(asctime)s %(processName)s %(threadName)s %(filename)s %(funcName)s %(lineno)d %(levelname)-8s %(message)s')
 app.log.handlers[0].setFormatter(formatter)
 
 @app.route('/', methods=['GET'])
@@ -16,6 +16,11 @@ def home():
 @app.route('/user/status', methods=['GET'])
 def home():
     resp = UserController(app).get_status()
+    return Response(body=resp, status_code=200, headers={"Content-Type": "application/json"})
+
+@app.route('/user/name', methods=['GET'])
+def home():
+    resp = UserController(app).get_name()
     return Response(body=resp, status_code=200, headers={"Content-Type": "application/json"})
 
 

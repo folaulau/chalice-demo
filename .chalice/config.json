@@ -10,11 +10,20 @@
       "platform_add_content": "/add/content"
   },
   "stages": {
+    "test": {
+      "api_gateway_stage": "api",
+      "environment_variables": {
+        "avl_env": "test",
+        "log_level" : "DEBUG",
+        "USERNAME": "chalice-test"
+      }
+    },
     "dev": {
       "api_gateway_stage": "api",
       "environment_variables": {
         "avl_env": "dev",
-        "log_level" : "DEBUG"
+        "log_level" : "DEBUG",
+        "USERNAME": "chalice"
       }
     },
     "qa": {
