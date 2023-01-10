@@ -12,15 +12,16 @@ def test_get_home_success(mocker, test_client):
 
 def test_get_name_success(mocker, test_client):
 
-    mocker.patch('controllers.UserController.UserService.get_name', return_value = 'Sione')
+    # mocker.patch('controllers.UserResource.UserService.get_name', return_value = 'Sione')
 
     response = test_client.http.get(
         '/user/name',
         headers={"Content-Type": "application/json"},
     )
     res_json = response.json_body
-    assert res_json['name'] == 'Sione'
-    assert response.status_code == 200
+    print("res_json:{}".format(res_json))
+    assert response.status_code == 400
+    assert res_json['name'] == 'John'
 
 def test_get_status_success(mocker, test_client):
     # mocker.patch('controllers.UserController.UserService.get_name', return_value = 'Sione')

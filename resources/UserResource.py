@@ -4,13 +4,17 @@
 import logging
 import os
 from threading import Thread
+
+from services.ApiException import ApiException
 from services.UserService import UserService
 from services.ApiThread import ApiThread
+from chalice import BadRequestError
+from chalice import ChaliceUnhandledError
+import logging
 
-class UserController(object):
-    def __init__(self, app):
+class UserResource(object):
+    def __init__(self):
         self.logger = logging.getLogger("chalice-demo")
-        self.app = app
         self.user_service = UserService()
 
     def get_status(self):
@@ -29,5 +33,16 @@ class UserController(object):
 
     def get_name(self):
         self.logger.info("get name")
-        return {'name':self.user_service.get_name()}
+
+        # num = 2/ 0
+        #
+        # print("num:{}".format(num))
+
+        if 0==0:
+            # raise ApiException("Something went wrong")
+            # raise Exception("Something went wrong")
+            # raise ChaliceUnhandledError("0==0")
+            raise BadRequestError("Something went wrong")
+
+        return {'name':'John'}
 
