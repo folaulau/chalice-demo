@@ -20,31 +20,38 @@ app.register_blueprint(blueprint=user_blueprint, url_prefix="/users")
 #     app.log.info("After calling my main Lambda function.")
 #     return response
 
-@app.middleware('all')
-def handle_errors(event, get_response):
-    app.log.info("Before handle_errors.")
-    response = None
-    try:
-        response = get_response(event)
-    except BadRequestError as e:
-        app.log.info("BadRequestError, error=%s" % str(e))
-        response = Response(status_code=400, body=str(e),
-                        headers={'Content-Type': 'text/plain'})
-    except ChaliceUnhandledError as e:
-        app.log.info("ChaliceUnhandledError. error={}".format(e))
-        response = Response(status_code=500, body=str(e),
-                        headers={'Content-Type': 'text/plain'})
-    except:
-        app.log.info("Something went wrong")
-    #else block lets you execute code when there is no error.
-    else:
-        app.log.info("Nothing went wrong")
+@app.middleware('http')
+def middleware(event, get_response):
+    app.log.info("Start middleware!")
+    response = get_response(event)
 
-    app.log.info("response.status_code={}".format(response.status_code))
-    app.log.info("response.body={}".format(response.body))
-    app.log.info("response.headers={}".format(response.headers))
-    app.log.info("After handle_errors.")
+    if response.status_code == 500:
+        # app.log.error("".format(response.body))
+        response.body = {
+            'message': 'Something went wrong'
+        }
+        response.headers = {'Content-Type': 'application/json'}
+    elif response.status_code == 400:
+        body = response.body
+        response.body = {
+            'message': body['Message']
+        }
+        app.log.error("body={}, type={}".format(response.body, type(response.body)))
+
+    app.log.info("End middleware!")
     return response
+
+@app.route('/', methods=['GET'])
+def home():
+    resp = {'message':'Welcome to Chalice Learning'}
+    return Response(body=resp, status_code=200, headers={"Content-Type": "application/json"})
+
+@app.route('/user/status', methods=['GET'])
+def get_status():
+    app.log.info("get_status")
+    resp = UserResource().get_status()
+    app.log.info("return Response")
+    return Response(body=resp, status_code=200, headers={"Content-Type": "application/json"})
 
 # @app.middleware('all')
 # def handle_errors(event, get_response):
@@ -110,18 +117,6 @@ def handle_errors(event, get_response):
 #     app.log.info("After handle_errors.")
 #
 #     return response
-
-@app.route('/', methods=['GET'])
-def home():
-    resp = {'message':'Welcome to Chalice Learning'}
-    return Response(body=resp, status_code=200, headers={"Content-Type": "application/json"})
-
-@app.route('/user/status', methods=['GET'])
-def get_status():
-    app.log.info("get_status")
-    resp = UserResource(app).get_status()
-    app.log.info("return Response")
-    return Response(body=resp, status_code=200, headers={"Content-Type": "application/json"})
 
 # @app.route('/user/name', methods=['GET'])
 # def get_name():

@@ -9,9 +9,9 @@ blueprint = Blueprint(__name__)
 
 @blueprint.route('/name', methods=["GET"])
 def get_name():
-    log.info("get_status")
-    resp = UserResource().get_status()
-    log.info("get_status")
+    log.info("get_name")
+    resp = UserResource().get_name()
+    log.info("get_name")
 
     log.info("headers={}".format(blueprint.current_app.current_request.headers))
     log.info("query_params={}".format(blueprint.current_app.current_request.query_params))
